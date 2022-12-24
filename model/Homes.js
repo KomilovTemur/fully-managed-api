@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const createPostedDate = () => {
+  const today = new Date()
+  return `${today.getDay()}:${today.getMonth()}:${today.getUTCFullYear()}`
+}
 const HomesSchema = new Schema({
   address: {
     type: String,
@@ -27,7 +31,11 @@ const HomesSchema = new Schema({
   },
   postedDate: {
     type: String,
-    default: new Date.UTC(),
+    default: createPostedDate(),
+  },
+  region: {
+    type: String,
+    required: true,
   },
 });
 
