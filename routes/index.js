@@ -2,15 +2,17 @@ var express = require('express');
 var router = express.Router();
 const Homes = require("../model/Homes")
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function(req, res) {
+  Homes.find().exec((err, homes) => {
+    if (err) throw err
+    res.json(homes)
+  })
 });
 
 router.post('/addNewPost', async (req, res) => {
   const home = await new Homes(req.body)
   await home.save();
-  res.json(home)
+  res.sendStatus(200)
 })
 
 module.exports = router;
