@@ -22,8 +22,6 @@ const UserSchema = new Schema({
   ],
 });
 
-
-
 UserSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
