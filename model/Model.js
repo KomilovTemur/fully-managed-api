@@ -34,15 +34,15 @@ UserSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
-UserSchema.methods.generateAuthToken = async function () {
-  const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.TOKENSECRET);
+// UserSchema.methods.generateAuthToken = async function () {
+//   const user = this;
+//   const token = jwt.sign({ _id: user._id.toString() }, process.env.TOKENSECRET);
   
-  user.tokens = user.token.push({ token });
-  await user.save();
+//   user.tokens = user.token.push({ token });
+//   await user.save();
 
-  return token;
-};
+//   return token;
+// };
 
 UserSchema.methods.toJSON = function () {
   const user = this;

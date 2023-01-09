@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/home-store", {
+mongoose.connect("mongodb+srv://tim:1234@cluster0.y7kudnb.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
 });
 
