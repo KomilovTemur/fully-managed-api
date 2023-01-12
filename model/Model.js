@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   },
   email: String,
   password: String,
+  avatar: { tpye: String, require: false },
   token: [
     {
       token: {
@@ -36,8 +37,14 @@ UserSchema.statics.findByCredentials = async (email, password) => {
 
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.TOKENSECRET);
-  
+  const token = jwt.sign(
+    { _id: user._id.toString() },
+    process.env.TOKENSECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
+
   user.tokens = user.token.push({ token });
   await user.save();
 
