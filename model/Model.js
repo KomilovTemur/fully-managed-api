@@ -3,25 +3,37 @@ const { Schema } = mongoose;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const UserSchema = new Schema({
-  name: {
-    type: String,
-  },
-  age: {
-    type: Number,
-  },
-  email: String,
-  password: String,
-  avatar: { tpye: String, require: false },
-  token: [
-    {
-      token: {
-        type: String,
-        required: true,
-      },
+const UserSchema = new Schema(
+  {
+    name: {
+      type: String,
     },
-  ],
-});
+    username: {
+      type: String,
+      required: false,
+    },
+    age: {
+      type: Number,
+    },
+    email: String,
+    password: String,
+    avatar: {
+      type: String,
+      require: false,
+    },
+    token: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 UserSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
@@ -64,6 +76,8 @@ UserSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
+    user.avatar = "/user/avatars/default.jpg";
+    user.username = this._id
   }
   next();
 });
