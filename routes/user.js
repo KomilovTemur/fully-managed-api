@@ -47,9 +47,9 @@ router.post("/login", async (req, res) => {
 });
 
 // get user with id
-router.get("/users/:id", auth, (req, res) => {
-  const _id = req.params.id;
-  User.findById(_id).then((user) => {
+router.get("/users/:username", (req, res) => {
+  const username = req.params.username;
+  User.findOne({ username }).then((user) => {
     if (!user) {
       return res.status(404).send();
     }
