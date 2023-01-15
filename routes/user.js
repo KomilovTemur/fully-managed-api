@@ -63,9 +63,9 @@ router.get("/settings", auth, async (req, res) => {
 });
 
 // Updating user
-router.patch("/users/:id", auth, async (req, res) => {
+router.patch("/users/:username", auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const user = await User.findOneAndUpdate(req.params.username, req.body, {
       new: true,
       runValidators: true,
     });
