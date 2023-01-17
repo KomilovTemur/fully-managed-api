@@ -65,16 +65,20 @@ router.get("/settings", auth, async (req, res) => {
 // Updating user
 router.patch("/users/:username", auth, async (req, res) => {
   try {
-    const user = await User.findOneAndUpdate(req.params.username, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const user = await User.findOneAndUpdate(
+      { username: req.params.username },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     if (!user) {
       return res.status(404).send();
     }
     res.send(user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(e.originalStack);
   }
 });
 
