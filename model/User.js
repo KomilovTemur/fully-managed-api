@@ -56,7 +56,6 @@ UserSchema.methods.generateAuthToken = async function () {
       expiresIn: "1d",
     }
   );
-
   user.tokens = user.token.push({ token });
   await user.save();
 
