@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 const User = require("../model/User");
 const auth = require("../middleware/auth");
+const bcrypt = require("bcryptjs");
+
 
 // get all users
 router.get("/", function (req, res) {
@@ -65,14 +67,27 @@ router.get("/settings", auth, async (req, res) => {
 // Updating user
 router.patch("/users/:username", auth, async (req, res) => {
   try {
-    const user = await User.findOneAndUpdate(
-      { username: req.params.username },
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    let user;
+    if (req.body.password) {
+      const hash = await bcrypt.hash(req.body.password, 8)
+      user = await User.findOneAndUpdate(
+        { username: req.params.username },
+        { ...req.body, password: hash },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    } else {
+      user = await User.findOneAndUpdate(
+        { username: req.params.username },
+        req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    }
     if (!user) {
       return res.status(404).send();
     }
