@@ -115,7 +115,7 @@ router.post("/users/:username/uploadAvatar", auth, upload.single("avatar"), asyn
     ).then(data => {
       res.send(data)
     }).catch(err => {
-      res.sendStatus(500).send(err)
+      res.sendStatus(201).send(err)
     })
   } catch (error) {
     res.sendStatus(500).send(err)
