@@ -3,7 +3,17 @@ var router = express.Router();
 const User = require("../model/User");
 const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
+const multer = require("multer")
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/user/avatars")
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${req.user.username}.jpg`)
+  }
 
+})
+const upload = multer({ storage: storage })
 
 // get all users
 router.get("/", function (req, res) {
@@ -96,6 +106,25 @@ router.patch("/users/:username", auth, async (req, res) => {
     res.status(400).send(e.originalStack);
   }
 });
+
+// upload avatar
+router.post("/users/:username/uploadAvatar", auth, upload.single("avatar"), async (req, res) => {
+  try {
+    await User.findOneAndUpdate({ username: req.user.username },
+      { avatar: `/user/avatars/${req.user.username}.jpg` }
+    ).then(data => {
+      res.send(data)
+    }).catch(err => {
+      res.sendStatus(500).send(err)
+    })
+  } catch (error) {
+    res.sendStatus(500).send(err)
+  }
+
+
+
+
+})
 
 // Delete user
 router.delete("/users/:id", auth, async (req, res) => {
