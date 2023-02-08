@@ -120,10 +120,6 @@ router.post("/users/:username/uploadAvatar", auth, upload.single("avatar"), asyn
   } catch (error) {
     res.sendStatus(500).send(err)
   }
-
-
-
-
 })
 
 // Delete user
