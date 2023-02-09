@@ -4,6 +4,7 @@ const User = require("../model/User");
 const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
 const multer = require("multer")
+const fs = require("fs")
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/user/avatars")
@@ -123,13 +124,25 @@ router.post("/users/:username/uploadAvatar", auth, upload.single("avatar"), asyn
 })
 
 // Delete user
-router.delete("/users/:id", auth, async (req, res) => {
+router.delete("/users/:username", auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).send();
-    }
-    res.send(user);
+    await User.findOneAndDelete({ username: req.params.username })
+      .then((data) => {
+        const { avatar } = data
+        if (avatar == "/user/avatars/default.jpg") {
+          return
+        } else {
+          fs.access(`public${avatar}`, err => {
+            if (!err) {
+              fs.unlinkSync(`public${avatar}`)
+              res.send("deleted")
+            }
+          })
+        }
+      }).catch((err) => {
+        console.log(err);
+        res.status(404).send();
+      })
   } catch (e) {
     res.status(500).send();
   }
