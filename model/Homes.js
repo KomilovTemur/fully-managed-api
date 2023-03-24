@@ -36,7 +36,7 @@ const HomesSchema = new Schema({
   region: {
     type: String,
     required: true,
-  },
+  }
 });
 
 module.exports = mongoose.model("homes", HomesSchema);
